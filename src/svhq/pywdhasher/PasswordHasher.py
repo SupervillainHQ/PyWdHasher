@@ -20,7 +20,7 @@ It defines classes_and_methods
 import sys
 import getpass
 import hashlib
-import time
+import rules.Rules
 
 from argparse import ArgumentParser
 from Tkinter import Tk
@@ -66,6 +66,19 @@ def main(argv=None): # IGNORE:C0111
     domain = r.clipboard_get()
 
     password = hashlib.md5(domain + salt).hexdigest()
+    
+    if args.rule == "uc":
+        rule = rules.Rules.UC()
+        password = rule.apply(password)
+    elif args.rule == "ucfirst":
+        rule = rules.Rules.UCFirst()
+        password = rule.apply(password)
+    elif args.rule == "uclast":
+        rule = rules.Rules.UCLast()
+        password = rule.apply(password)
+    elif args.rule == "reverse":
+        rule = rules.Rules.Reverse()
+        password = rule.apply(password)
 
     if args.out is True:
         print "password for domain '" + domain + "':"
@@ -75,7 +88,6 @@ def main(argv=None): # IGNORE:C0111
         print "password for domain '" + domain + "' is added to clipboard..."
         r.update()
         r.destroy()
-#        time.sleep(1)
         raw_input("Paste password into password-field, then hit Enter to exit")
 
     return 0
