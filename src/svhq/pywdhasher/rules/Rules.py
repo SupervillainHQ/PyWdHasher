@@ -3,19 +3,8 @@ Created on 3 Jul 2019
 
 @author: anderskrarup
 '''
-from __builtin__ import NotImplementedError
 
 class UCFirst(object):
-    '''
-    classdocs
-    '''
-
-
-    def __init__(self, params):
-        '''
-        Constructor
-        '''
-    
 
     def apply(self, word):
         return word.capitalize()
