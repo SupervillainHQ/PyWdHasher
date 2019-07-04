@@ -68,6 +68,8 @@ def main(argv=None): # IGNORE:C0111
     
     truncatLen = re.compile(r"^len:([\d]*)$")
     truncatNel = re.compile(r"^nel:([\d]*)$")
+    specialLen = re.compile(r"^special:([\d]*)$")
+    specialNel = re.compile(r"^laiceps:([\d]*)$")
 
     password = hashlib.md5(domain + salt).hexdigest()
     
@@ -93,6 +95,16 @@ def main(argv=None): # IGNORE:C0111
             matches = truncatNel.search(r)
             l = matches.group(1)
             rule = rules.Rules.Truncate(int(l), reverse=True)
+            password = rule.apply(password)
+        elif specialLen.match(r):
+            matches = specialLen.search(r)
+            l = matches.group(1)
+            rule = rules.Rules.Special(int(l))
+            password = rule.apply(password)
+        elif specialNel.match(r):
+            matches = specialNel.search(r)
+            l = matches.group(1)
+            rule = rules.Rules.Special(int(l), reverse=True)
             password = rule.apply(password)
 
     if args.out is True:
