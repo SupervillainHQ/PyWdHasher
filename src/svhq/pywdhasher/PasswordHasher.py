@@ -17,6 +17,7 @@ It defines classes_and_methods
 @deffield    updated: Updated
 '''
 
+import re
 import sys
 import getpass
 import hashlib
@@ -55,7 +56,7 @@ def main(argv=None): # IGNORE:C0111
     # Setup argument parser
     parser = ArgumentParser()
     parser.add_argument("-o", "--out", action="store_true", help="output password in tty instead of inserting in clipboard")
-    parser.add_argument("-r", "--rule", help="transform rule(s)")
+    parser.add_argument("-r", "--rule", action='append', help="transform rule(s)")
     
     # clipboard manager
     r = Tk()
@@ -64,21 +65,35 @@ def main(argv=None): # IGNORE:C0111
     args = parser.parse_args()
     salt = getpass.getpass("salt: ")
     domain = r.clipboard_get()
+    
+    truncatLen = re.compile(r"^len:([\d]*)$")
+    truncatNel = re.compile(r"^nel:([\d]*)$")
 
     password = hashlib.md5(domain + salt).hexdigest()
     
-    if args.rule == "uc":
-        rule = rules.Rules.UC()
-        password = rule.apply(password)
-    elif args.rule == "ucfirst":
-        rule = rules.Rules.UCFirst()
-        password = rule.apply(password)
-    elif args.rule == "uclast":
-        rule = rules.Rules.UCLast()
-        password = rule.apply(password)
-    elif args.rule == "reverse":
-        rule = rules.Rules.Reverse()
-        password = rule.apply(password)
+    for r in args.rule:
+        if r == "uc":
+            rule = rules.Rules.UC()
+            password = rule.apply(password)
+        elif r == "ucfirst":
+            rule = rules.Rules.UCFirst()
+            password = rule.apply(password)
+        elif r == "uclast":
+            rule = rules.Rules.UCLast()
+            password = rule.apply(password)
+        elif r == "reverse":
+            rule = rules.Rules.Reverse()
+            password = rule.apply(password)
+        elif truncatLen.match(r):
+            matches = truncatLen.search(r)
+            l = matches.group(1)
+            rule = rules.Rules.Truncate(int(l))
+            password = rule.apply(password)
+        elif truncatNel.match(r):
+            matches = truncatNel.search(r)
+            l = matches.group(1)
+            rule = rules.Rules.Truncate(int(l), reverse=True)
+            password = rule.apply(password)
 
     if args.out is True:
         print "password for domain '" + domain + "':"

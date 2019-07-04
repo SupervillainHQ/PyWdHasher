@@ -36,3 +36,16 @@ class Reverse(object):
     def apply(self, word):
         return word[::-1]
         
+class Truncate(object):
+    
+    def __init__(self, length, reverse = False):
+        self.length = length
+        self.reverse = reverse
+        
+    def apply(self, word):
+        if self.reverse:
+            last = word[-self.length:]
+            return last
+        else:
+            return word[0:self.length]
+        
