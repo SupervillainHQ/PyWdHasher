@@ -25,6 +25,7 @@ import rules.Rules
 
 from argparse import ArgumentParser
 from Tkinter import Tk
+from scipy.weave.converters import default
 
 __all__ = []
 __version__ = 0.1
@@ -57,6 +58,7 @@ def main(argv=None): # IGNORE:C0111
     parser = ArgumentParser()
     parser.add_argument("-o", "--out", action="store_true", help="output password in tty instead of inserting in clipboard")
     parser.add_argument("-r", "--rule", action='append', help="transform rule(s)")
+    parser.add_argument("-a", "--algorithm", help="transform rule(s)", default="md5")
     
     # clipboard manager
     r = Tk()
@@ -71,7 +73,12 @@ def main(argv=None): # IGNORE:C0111
     specialLen = re.compile(r"^special:([\d]*)$")
     specialNel = re.compile(r"^laiceps:([\d]*)$")
 
-    password = hashlib.md5(domain + salt).hexdigest()
+    if args.algorithm == 'sha224':
+        password = hashlib.sha224(domain + salt).hexdigest()
+    elif args.algorithm == 'sha512':
+        password = hashlib.sha512(domain + salt).hexdigest()
+    else:
+        password = hashlib.md5(domain + salt).hexdigest()
     
     for r in args.rule:
         if r == "uc":
