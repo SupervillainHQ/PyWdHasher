@@ -12,7 +12,9 @@ The password generator will read the domain from the clipboard and ask you for a
 
 You should then be able to paste you password directly into password fields (Ctrl+V, Cmd+V).
 
-The cryptographic hashing algorithm is a one-way hashing algorithm, meaning that the outcome will always be the same, if the same website domain and secret has been used.
+The cryptographic hashing algorithm is a one-way hashing algorithm, meaning that the outcome will always be the same, if the same website domain and secret has been used. As a consequence, if you change the website domain, but leave the secret as for other website domains, the generated password will be different, even if you only have to remember the same secret for all those websites (because the website domain is different).
+
+So you only have to remember one secret, and you don't have anything on disc/in the cloud that can be compromised or discontinued or unsubscribed or removed by change/bug/error.
 
 ### Options
 
