@@ -7,11 +7,13 @@ Created on 3 Jul 2019
 class UCFirst(object):
 
     def apply(self, word):
+        # TODO: this should be implemented so that it is the first letter that is shifted, not blindly the first character (which could be a digit)
         return word.capitalize()
     
 class UCLast(object):
     
     def apply(self, word):
+        # TODO: this should be implemented so that it is the last letter that is shifted, not blindly the last character (which could be a digit)
         rev = word[::-1]
         revCapped = rev.capitalize()
         return revCapped[::-1]

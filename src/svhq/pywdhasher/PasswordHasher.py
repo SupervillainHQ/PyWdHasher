@@ -25,7 +25,6 @@ import rules.Rules
 
 from argparse import ArgumentParser
 from Tkinter import Tk
-from scipy.weave.converters import default
 
 __all__ = []
 __version__ = 0.1
